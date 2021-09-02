@@ -21,7 +21,7 @@ const cameraPlacement1: CameraPlacement = {
   camera: new THREE.PerspectiveCamera(45, 1, 0.01, 3),
   cameraPosition: [9, 4, 5],
   cameraLookAt: [0, -1.4, 1],
-  texturePath: '../images/shelf1.jpg',
+  texturePath: './images/shelf1.jpg',
   textureFallbackColor: '#37E140',
 };
 
@@ -29,7 +29,7 @@ const cameraPlacement5: CameraPlacement = {
   camera: new THREE.PerspectiveCamera(45, 1, 0.01, 3),
   cameraPosition: [8, 4, 0],
   cameraLookAt: [-0.2, -1.2, 0.5],
-  texturePath: '../images/shelf5.jpg',
+  texturePath: './images/shelf5.jpg',
   textureFallbackColor: '#37E140',
 };
 
