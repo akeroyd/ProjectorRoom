@@ -18,6 +18,8 @@ export default class ProjectorRoom {
   modelLoader:GLTFLoader;
   cameraPlacements:CameraPlacement[];
   mesh: THREE.Mesh;
+  materials: ProjectedMaterial[];
+  highlightedCamera: number;
 
   constructor(
     scene:THREE.Scene,
@@ -29,17 +31,17 @@ export default class ProjectorRoom {
     this.modelLoader.load(modelPath, (gltf) => this.init(gltf), undefined, console.error);
     this.cameraPlacements = cameraPlacements;
     this.mesh = new THREE.Mesh();
+    this.highlightedCamera = 1;
+    this.materials = [];
   }
 
   init(gltf:GLTF) {
     const geometry = extractGeometry(gltf);
     geometry.clearGroups()
 
-
     const texture1 = new THREE.TextureLoader().load('../images/shelf1.jpg');
 
     const helpers: THREE.CameraHelper[] = [];
-    const materials:ProjectedMaterial[] = [];
 
     this.cameraPlacements.forEach((placement, index) => {
 
@@ -50,18 +52,19 @@ export default class ProjectorRoom {
       placement.camera.lookAt(...placement.cameraLookAt);
 
       // define materials
-      materials.push(new ProjectedMaterial({
+      this.materials.push(new ProjectedMaterial({
         camera: placement.camera,
         texture: texture1,
         color: placement.textureFallbackColor,
         transparent: true,
+        opacity: (index === this.highlightedCamera) ? 0.9 : 0.5,
       }));
 
       geometry.addGroup(0, Infinity, index);
     });
 
     // add geometry to scene
-    this.mesh = new THREE.Mesh(geometry, materials);
+    this.mesh = new THREE.Mesh(geometry, this.materials);
     this.scene.add(this.mesh);
 
     this.project();
@@ -86,4 +89,11 @@ export default class ProjectorRoom {
     this.cameraPlacements[camera].camera.position.set(x, y, z);
     this.project();
   };
+
+  setHighlightCamera(cameraIndex:number) {
+    this.highlightedCamera = cameraIndex;
+    this.materials.forEach((material, index) => {
+      material.opacity = (index === this.highlightedCamera) ? 0.9 : 0.5
+    });
+  }
 }

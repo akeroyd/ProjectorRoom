@@ -7,7 +7,7 @@ declare module 'three-projected-material' {
     texture: any,
     color: string,
     transparent: boolean,
-    
+    opacity: number,
   }
 
   export default class ProjectedMaterial extends MeshPhysicalMaterial {
