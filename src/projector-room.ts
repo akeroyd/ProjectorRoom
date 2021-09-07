@@ -5,12 +5,11 @@ import ProjectedMaterial from 'three-projected-material';
 import { extractGeometry } from './utils';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
+const textureFallbackColor = '#dddddd';
+
 export interface CameraPlacement {
   camera: THREE.PerspectiveCamera;
-  cameraPosition: [number, number, number],
-  cameraLookAt: [number, number, number],
   texturePath: string;
-  textureFallbackColor: string;
 }
 
 export default class ProjectorRoom {
@@ -39,8 +38,6 @@ export default class ProjectorRoom {
     const geometry = extractGeometry(gltf);
     geometry.clearGroups()
 
-    const texture1 = new THREE.TextureLoader().load('../images/shelf1.jpg');
-
     const helpers: THREE.CameraHelper[] = [];
 
     this.cameraPlacements.forEach((placement, index) => {
@@ -48,14 +45,11 @@ export default class ProjectorRoom {
       helpers[index] = new THREE.CameraHelper(placement.camera);
       this.scene.add(helpers[index]);
 
-      placement.camera.position.set(...placement.cameraPosition);
-      placement.camera.lookAt(...placement.cameraLookAt);
-
       // define materials
       this.materials.push(new ProjectedMaterial({
         camera: placement.camera,
-        texture: texture1,
-        color: placement.textureFallbackColor,
+        texture: new THREE.TextureLoader().load(placement.texturePath),
+        color: textureFallbackColor,
         transparent: true,
         opacity: (index === this.highlightedCamera) ? 0.9 : 0.5,
       }));
@@ -65,6 +59,8 @@ export default class ProjectorRoom {
 
     // add geometry to scene
     this.mesh = new THREE.Mesh(geometry, this.materials);
+    this.mesh.position.set(0,2.3,0);
+    this.mesh.rotateY(Math.PI / 2);
     this.scene.add(this.mesh);
 
     this.project();
