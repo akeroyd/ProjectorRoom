@@ -22,7 +22,8 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "three": "^0.130.1",
+    "three": "^0.118.3",
+    "three-fspy-camera-loader": "^2.4.2",
     "three-projected-material": "^2.0.3",
     "webpack": "^5.46.0",
     "webpack-dev-server": "^3.11.2"
