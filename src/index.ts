@@ -66,7 +66,7 @@ function init() {
   
   (window as any).projectorRoom = projectorRoom; // for debug only
 
-  controls.addEventListener('change', projectorRoom.highlightClosetCamera);
+  controls.addEventListener('change', projectorRoom.highlightClosetCamera.bind(projectorRoom));
 }
 
 

@@ -79,7 +79,6 @@ export default class ProjectorRoom {
     this.mesh.rotateY(Math.PI / 2); // This is specific to shelf.glb
     this.scene.add(this.mesh);
 
-    console.log('calling prooject')
     this.project();
 
     // add lights
@@ -102,13 +101,12 @@ export default class ProjectorRoom {
   
   highlightClosetCamera(e:any) {
     const orbitCam = e.target?.object;
-    console.log(this)
-    // let closestCameraIndex = 0;
-    // this.cameras.forEach((cam, index, arr) => {
-    //   if (Math.abs(orbitCam.rotation.y - cam.rotation.y) < Math.abs(orbitCam.rotation.y - arr[closestCameraIndex].rotation.y)) {
-    //     closestCameraIndex = index;
-    //   }
-    // })
-    // this.setHighlightCamera(closestCameraIndex);
+    let closestCameraIndex = 0;
+    this.cameras.forEach((cam, index, arr) => {
+      if (Math.abs(orbitCam.rotation.y - cam.rotation.y) < Math.abs(orbitCam.rotation.y - arr[closestCameraIndex].rotation.y)) {
+        closestCameraIndex = index;
+      }
+    })
+    this.setHighlightCamera(closestCameraIndex);
   }
 }
