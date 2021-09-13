@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import FSpyCameraLoader from "three-fspy-camera-loader";
 import ProjectorRoom, { CameraPlacement } from './projector-room';
 
 const scene = new THREE.Scene()
@@ -29,16 +28,7 @@ cube2.position.set(0,0,0);
 scene.add( cube2 );
 // TEMP
 
-const cameraLoader1 = new FSpyCameraLoader();
-const cameraLoader2 = new FSpyCameraLoader();
-const cameraLoader3 = new FSpyCameraLoader();
-let camera1: THREE.PerspectiveCamera;
-const targetCanvas = document.querySelector("#myCanvas");
-if (targetCanvas !== null && targetCanvas instanceof HTMLCanvasElement) {
-  cameraLoader1.setCanvas(targetCanvas)
-  cameraLoader2.setCanvas(targetCanvas)
-  cameraLoader3.setCanvas(targetCanvas)
-}
+
 
 init(); 
 
@@ -52,24 +42,19 @@ function onWindowResize() {
     render();
 }
 
-async function init() {
-
-  const camera1:THREE.PerspectiveCamera = await cameraLoader1.loadAsync('./cameras/checkers1.json');
-  const camera2:THREE.PerspectiveCamera = await cameraLoader2.loadAsync('./cameras/checkers2.json');
-  const camera3:THREE.PerspectiveCamera = await cameraLoader3.loadAsync('./cameras/checkers3.json');
-
+function init() {
   const cameraPlacement1: CameraPlacement = {
-    camera: camera1,
+    cameraJsonPath: './cameras/checkers1.json',
     texturePath: './images/checkers1.jpg',
   };
 
   const cameraPlacement2: CameraPlacement = {
-    camera: camera2,
+    cameraJsonPath: './cameras/checkers2.json',
     texturePath: './images/checkers2.jpg',
   };
 
   const cameraPlacement3: CameraPlacement = {
-    camera: camera3,
+    cameraJsonPath: './cameras/checkers3.json',
     texturePath: './images/checkers3.jpg',
   };
 
@@ -81,23 +66,7 @@ async function init() {
   
   (window as any).projectorRoom = projectorRoom; // for debug only
 
-  const cameraYRotations = [
-    camera1.rotation.y,
-    camera2.rotation.y,
-    camera3.rotation.y,
-  ]
-
-  const highlightClosetCamera = () => {
-    let closestCameraIndex = 0;
-    cameraYRotations.forEach((value, index, arr) => {
-      if (Math.abs(camera.rotation.y - value) < Math.abs(camera.rotation.y - arr[closestCameraIndex])) {
-        closestCameraIndex = index;
-      }
-    })
-    projectorRoom.setHighlightCamera(closestCameraIndex);
-  };
-
-  controls.addEventListener('change', highlightClosetCamera);
+  controls.addEventListener('change', projectorRoom.highlightClosetCamera.bind(projectorRoom));
 }
 
 
