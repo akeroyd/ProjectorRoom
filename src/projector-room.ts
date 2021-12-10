@@ -60,14 +60,15 @@ export default class ProjectorRoom {
       this.scene.add(this.cameras[index]);
 
       helpers[index] = new THREE.CameraHelper(this.cameras[index]);
-      this.scene.add(helpers[index]);
+      // this.scene.add(helpers[index]);
       
       this.materials.push(new ProjectedMaterial({
         camera: this.cameras[index],
         texture: new THREE.TextureLoader().load(placement.texturePath),
         color: textureFallbackColor,
         transparent: true,
-        opacity: (index === this.highlightedCamera) ? 0.9 : 0.5,
+        opacity: 1,
+        // opacity: (index === this.highlightedCamera) ? 0.9 : 0.7,
       }));
       
       geometry.addGroup(0, Infinity, index);
@@ -75,8 +76,6 @@ export default class ProjectorRoom {
 
     // add geometry to scene
     this.mesh = new THREE.Mesh(geometry, this.materials);
-    this.mesh.position.set(0,2.3,0); // This is specific to shelf.glb
-    this.mesh.rotateY(Math.PI / 2); // This is specific to shelf.glb
     this.scene.add(this.mesh);
 
     this.project();
@@ -95,7 +94,7 @@ export default class ProjectorRoom {
   setHighlightCamera(cameraIndex:number) {
     this.highlightedCamera = cameraIndex;
     this.materials.forEach((material, index) => {
-      material.opacity = (index === this.highlightedCamera) ? 0.9 : 0.5
+      material.opacity = (index === this.highlightedCamera) ? 0.9 : 0.7
     });
   }
   
@@ -107,6 +106,8 @@ export default class ProjectorRoom {
         closestCameraIndex = index;
       }
     })
-    this.setHighlightCamera(closestCameraIndex);
+    // this.setHighlightCamera(closestCameraIndex);
   }
+
+  // getCameraPosition
 }
